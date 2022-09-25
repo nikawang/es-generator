@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import Api from '@/api/book.js'
+// import Api from '@/api/book.js'
 
 export default {
   name: 'CreateCard',
@@ -55,16 +55,16 @@ export default {
   },
   methods: {
     async create() {
-      var book = {
-        title: this.title,
-        isbn: this.isbn,
-        categoryId: this.category,
-        formatId: this.format
-      }
+      // var book = {
+      //   title: this.title,
+      //   isbn: this.isbn,
+      //   categoryId: this.category,
+      //   formatId: this.format
+      // }
 
-      var result = await this.$confirm("Do you want to register it?");
+      var result = await this.$confirm("Do you want to create it?");
       if (result) {
-        Api.create(book, () => this.cancel(), (err) => this.errors = err.response.data)
+        // Api.create(book, () => this.cancel(), (err) => this.errors = err.response.data)
       }
     },
     cancel() {

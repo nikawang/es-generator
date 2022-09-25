@@ -8,13 +8,13 @@
 
       <div class="form">
         <md-field>
-          <label>User</label>
-          <md-input v-model="user" autofocus></md-input>
+          <label>Host</label>
+          <md-input v-model="host" autofocus></md-input>
         </md-field>
 
         <md-field md-has-password>
-          <label>Password</label>
-          <md-input v-model="password" type="password" @keyup.enter="login"></md-input>
+          <label>Token</label>
+          <md-input v-model="token" type="password" @keyup.enter="login"></md-input>
         </md-field>
       </div>
 
@@ -43,8 +43,8 @@ export default {
   data() {
     return {
       AppInfo,
-      user: '',
-      password: '',
+      host: '',
+      token: '',
       message: '',
       showErrorMessage: false,
       isLoading: false
@@ -54,7 +54,7 @@ export default {
     login() {
       this.isLoading = true
       Api.login(
-        {username: this.user, password: this.password},
+        {host: this.host, token: this.token},
         () => {
           this.isLoading = false
           this.$router.push("/home")

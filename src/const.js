@@ -7,8 +7,8 @@ export const AppInfo = {
 
 const api = "/api"
 const apiAuthBase = api + "/auth"
-
-export const ApiBook = api + "/books"
+export const ApiES = api + "/es"
+// export const ApiBook = api + "/books"
 export const ApiCategory = api + "/categories"
 export const ApiFormat = api + "/formats"
 

@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import Api from "@/api/book.js"
+// import Api from "@/api/book.js"
 
 export default {
   name: 'EditCard',
@@ -80,36 +80,36 @@ export default {
   methods: {
     async edit() {
       if(this.isEdit) {
-        var book = {
-          id: this.book.id,
-          title: this.title,
-          isbn: this.isbn,
-          categoryId: this.category,
-          formatId: this.format
-        }
+        // var book = {
+        //   id: this.book.id,
+        //   title: this.title,
+        //   isbn: this.isbn,
+        //   categoryId: this.category,
+        //   formatId: this.format
+        // }
 
         var result = await this.$confirm("Do you want to update it?");
         if (result) {
-          Api.edit(book, () => this.cancel(), (err) => this.errors = err.response.data)
+          // Api.edit(book, () => this.cancel(), (err) => this.errors = err.response.data)
         }
 
       } else {
-        Api.get( 
-          {id: this.book.id},
-          (body) => {
-            this.errors = ''
-            this.title = body.title
-            this.isbn = body.isbn
-            this.category = body.category.id
-            this.format = body.format.id
-            this.isEdit = true
-          })
+        // Api.get( 
+        //   {id: this.book.id},
+        //   (body) => {
+        //     this.errors = ''
+        //     this.title = body.title
+        //     this.isbn = body.isbn
+        //     this.category = body.category.id
+        //     this.format = body.format.id
+        //     this.isEdit = true
+        //   })
       }
     },
     async remove() {
       var result = await this.$confirm("Do you want to delete it?");
       if (result) {
-        Api.delete(this.book.id, () => this.cancel())
+        // Api.delete(this.book.id, () => this.cancel())
       }
     },
     cancel() {

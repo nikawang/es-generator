@@ -1,10 +1,10 @@
 <template>
   <md-card md-with-hover>
     <md-card-content>
-      <md-field :class="{ 'md-invalid' : errors.hasOwnProperty('esname')}">
+      <md-field :class="{ 'md-invalid' : errors.hasOwnProperty('name')}">
         <label>Elastic Search Name</label>
-        <md-input v-model="esname" autofocus required></md-input>
-        <span class="md-error">{{ errors['esname'] }}</span>
+        <md-input v-model="name" autofocus required></md-input>
+        <span class="md-error">{{ errors['name'] }}</span>
       </md-field>
       <md-field :class="{ 'md-invalid' : errors.hasOwnProperty('namespace')}">
         <label>Namespace</label>
@@ -25,9 +25,11 @@
         <md-icon>delete</md-icon>
       </md-button>
       </div>
-      <NodeSet
+      <!-- <NodeSet
        v-for='(nodeSet,index) in nodeSets' :key="nodeSets[index].nodeSetName" v-bind="nodeSets[index].nodeSetName">
-       </NodeSet>
+       </NodeSet> -->
+      <NodeSet v-for='(nodeSet,index) in nodeSets' :key="nodeSets[index]" :nodeSet="nodeSet" nodeSet.sync="nodeSet"  @size="getNodeSet"/>
+
      <!-- <md-field>
         <label>Format</label>
         <md-select v-model="format">
@@ -43,43 +45,54 @@
 </template>
 
 <script>
-import Api from '@/api/book.js'
+import Api from '@/api/es.js'
 import NodeSet from '@/components/NodeSet.vue'
 export default {
   name: 'CreateES',
+  props: {
+    es: Object,
+  },
   data () {
     return {
-      title: '',
-      isbn: '',
-      errors: [],
-      category: 1,
-      format: 1,
-      nodeSets: []
+      name: '',
+      namespace: '',
+      version: '',
+      health: '',
+      nodeSets: [],
+      errors: []
     };
   },
-  computed: {
-    categories() {
-      return this.$store.getters.getCategory
-    },
-    formats() {
-      return this.$store.getters.getFormat
-    }
-  },
+  // computed: {
+  //   categories() {
+  //     return this.$store.getters.getCategory
+  //   },
+  //   formats() {
+  //     return this.$store.getters.getFormat
+  //   }
+  // },
    components: {
     'NodeSet': NodeSet,
   },
   methods: {
     async create() {
-      var book = {
-        title: this.title,
-        isbn: this.isbn,
-        categoryId: this.category,
-        formatId: this.format
+      // var book = {
+      //   title: this.title,
+      //   isbn: this.isbn,
+      //   categoryId: this.category,
+      //   formatId: this.format
+      // }]
+
+      var es = {
+        name: this.name,
+        namespace: this.namespace,
+        version: this.version,
+        nodesets: this.nodeSets
       }
 
       var result = await this.$confirm("Do you want to register it?");
       if (result) {
-        Api.create(book, () => this.cancel(), (err) => this.errors = err.response.data)
+        console.log(es)
+        Api.create(es, () => this.cancel(), (err) => this.errors = err.response.data)
       }
     },
     cancel() { 
@@ -87,14 +100,21 @@ export default {
     },
     addNodeSet() {
          this.nodeSets.push({
-          nodeSetName: '',
-          nodeType: '',
-          diskSize: ''
+          name: '',
+          roles: '',
+          diskSize: '',
+          storageClass: '',
+          count: '',
+          isEdit: false,
          })
     },
     deleteNodeSet() {
          this.nodeSets.pop()
-    }
+    },
+     getNodeSet(value) {
+      this.ns.push(value)
+      // console.log("Parent from Child:\t" +value)
+    },
 
   }
 }

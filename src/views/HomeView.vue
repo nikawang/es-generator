@@ -3,7 +3,7 @@
     <template slot="header">
       <md-field md-clearable class="search-box md-autocomplete md-autocomplete-box md-inline">
         <div class="md-menu">
-          <md-input v-model="keyword" @keyup.enter="search" />
+          <md-input v-model="name" @keyup.enter="search" />
         </div>
         <label>Search...</label>
       </md-field>
@@ -15,7 +15,8 @@
     <template slot="main">
       <CreateES v-if="isCreate" @cancel="createCancel" />
       <md-progress-spinner v-if="isLoading" md-mode="indeterminate"></md-progress-spinner>
-      <EditCard v-else v-for="book in books" :book="book" :key="book.id" @cancel="getBookList" />
+      <EditES v-else v-for="es in eslist" :es="es" :key="es.metadata.name" @edit="hideAddButton" @cancel="createCancel"/>
+      <!-- <EditES v-else v-for="es in eslist" :es="es" :key="es.metadata.name" v-bind:class="{'es_item':true, 'green':(es.status.health==='green')}"  @cancel="getESList" /> -->
       <div class="margin"></div>
     </template>
 
@@ -37,25 +38,46 @@
   margin: 10px;
 }
 .md-card-content {
-  font-size: 16px !important;
+  font-size: 12px !important;
   padding: 20px;
 }
 .margin {
   height:70px;
 }
+
+.es_item {
+  font-size: 20px 
+
+}
+
+.es_item.green {
+  background-color: #74c289 !important;
+  color: white !important;
+}
+
+.es_item.yellow {
+  background-color: #dbc870 !important;
+  color: white !important;
+}
+
+.es_item.red {
+  background-color: #de9364 !important;
+  color: white !important;
+}
+
 </style>
 
 <script>
-import Api from "@/api/book.js"
+import Api from "@/api/es.js"
 import ViewBase from '@/components/ViewBase.vue'
 import CreateES from '@/views/CreateES.vue'
-import EditCard from '@/views/EditCard.vue'
+import EditES from '@/views/EditES.vue'
  
 export default {
   name: 'HomeView',
   el: '#cbn',
   data: () => ({
-    books: [],
+    eslist: [],
     keyword: '',
     contents: [],
     isLoading: false,
@@ -63,33 +85,45 @@ export default {
   }),
   components: {
     'CreateES': CreateES,
-    'EditCard': EditCard,
+    'EditES': EditES,
     'ViewBase': ViewBase,
   },
   created() {
-    this.getBookList()
+    this.getESList()
   },
   methods: {
     search() {
-      this.getBookList()
+      this.getESList()
     },
-    getBookList() {
+    getESList() {
       this.isLoading = true
-      Api.search({query: this.keyword}, 
-        (body) => {
-          this.books = body.content
-          this.isLoading = false
-        })
+      let vm = this
+      Api.list({query: this.name},
+      (body) => {
+          vm.eslist = body
+          // console.log(this.eslist)
+          vm.isLoading = false
+    })
+      // Api.search({query: this.keyword}, 
+      //   (body) => {
+      //     this.books = body.content
+      //     this.isLoading = false
+      //   })
     },
     create() {
       this.isCreate = true;
       document.querySelector('.md-app-scroller').scrollTop = 0;
       this.$el.querySelector('#createOverlay').style.display = "none";
+      // hideAddButton(); 
     },
     createCancel() {
       this.isCreate = false;
-      this.getBookList();
+      this.getESList();
       this.$el.querySelector('#createOverlay').style.display = "block";
+    },
+    hideAddButton() {
+      document.querySelector('.md-app-scroller').scrollTop = 0;
+      this.$el.querySelector('#createOverlay').style.display = "none";
     }
   }
 }

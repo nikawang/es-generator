@@ -11,7 +11,7 @@
           </slot>
 
           <div class="md-toolbar-section-end">
-            <md-button class="md-icon-button" @click="clickGithub">
+            <md-button class="md-icon-button">
               <md-icon><font-awesome-icon :icon="['fab', 'github']" /></md-icon>
             </md-button>
             <label v-if="userName != ''">{{ userName }}</label>
